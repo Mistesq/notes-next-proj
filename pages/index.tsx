@@ -14,18 +14,10 @@ import { Note } from './../types/general';
 import { useRouter } from 'next/router'
 import Link from 'next/link'
 
-const pageNames = {
-  '/checkout':'Membership',
-  '/checkout/shipping':'Shipping',
-  '/checkout/payment':'Payment',
-  '/checkout/review':'Review'
-}
 
 const Home: NextPage = () => {
   const router = useRouter()
-  // const link = pageNames[router.pathname]
 
-  console.log('router.pathname', router.pathname, router)
   let showNotePage = false
 
   const [showAddNote, setShowAddNote] = useState<boolean>(false)
@@ -40,14 +32,17 @@ const Home: NextPage = () => {
     date: "28.12.2021"
   })
 	const [searchText, setSearchText] = useState('')
-	// useEffect(()=>{
-	// 	const savedNotes = JSON.parse(localStorage.getItem('react-notes-app-data'))
+
+	useEffect(()=>{
+		const savedNotes = localStorage.getItem('react-notes-app-data')
     
-	// 	if(savedNotes)
-	// 	{
-	// 		setNotes(savedNotes)
-	// 	}
-	// },[])
+		if(savedNotes)
+		{
+      const notes = JSON.parse(savedNotes)
+      console.log('savedNotes', notes)
+			setNotes(notes)
+		}
+	},[])
 
   if(notes.findIndex(item => item.id == router.query.id) != -1) {
     showNotePage = true
@@ -131,7 +126,7 @@ const Home: NextPage = () => {
                 </Grid>
                 <Grid item xs={8}>
                   {!showAddNote ?
-                    <EditNote handleSave={addNote} handleEdit={editNote} handleDelete={deleteNote} note={currentNote}/>
+                    <EditNote handleEdit={editNote} handleDelete={deleteNote} note={currentNote}/>
                   : <AddNote handleSave={addNote}/>
                 }
                 </Grid>
@@ -154,7 +149,7 @@ const Home: NextPage = () => {
               </Box>
               <Grid container spacing={2}>
                 <Grid item xs={12}>
-                  <EditNote handleSave={addNote} handleEdit={editNote} handleDelete={deleteNote} note={currentNote}/>
+                  <EditNote handleEdit={editNote} handleDelete={deleteNote} note={currentNote}/>
                 </Grid>
               </Grid>
             </>

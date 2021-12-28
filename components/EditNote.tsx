@@ -3,13 +3,12 @@ import { TextField, Button } from '@mui/material';
 import { Note } from './../types/general';
 
 type EditNoteProps = {
-    handleSave: (text:string) => void,
     handleEdit: (noteId:string, text:string) => void,
     handleDelete: (id:string) => void,
     note: Note
 }
 
-const EditNote = ({handleSave, handleEdit, handleDelete, note}:EditNoteProps) => {
+const EditNote = ({handleEdit, handleDelete, note}:EditNoteProps) => {
     const [noteText, setNoteText] = useState(note.text)
     const [idRemovalCandidate, setIdRemovalCandidate] = useState('')
     const [isNeedRemovalCandidate, setIsNeedRemovalCandidate] = useState(false)
@@ -38,12 +37,6 @@ const EditNote = ({handleSave, handleEdit, handleDelete, note}:EditNoteProps) =>
             }
         }
     }
-    const handleSubmit = () => {
-        if(noteText.trim().length>0){
-            handleSave(noteText)
-            setNoteText('')
-        }
-    }
     return(
         <div className="note new">
             <TextField
@@ -52,7 +45,6 @@ const EditNote = ({handleSave, handleEdit, handleDelete, note}:EditNoteProps) =>
                 fullWidth
                 multiline
                 rows={4}
-                defaultValue="Default Value"
                 value={noteText}
                 onChange={handleChange}
             />

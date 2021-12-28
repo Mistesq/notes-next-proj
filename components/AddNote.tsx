@@ -28,7 +28,6 @@ const AddNote = ({handleSave}:AddNoteProps) => {
                 fullWidth
                 multiline
                 rows={4}
-                defaultValue="Default Value"
                 value={noteText}
                 onChange={handleChange}
             />

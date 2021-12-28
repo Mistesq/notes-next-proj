@@ -15,8 +15,8 @@ const NoteListItem = ({id,text,date,handleDelete, handleEdit, currentNoteId}:Not
         <ListItem
             selected={id === currentNoteId ? true : false}
             secondaryAction={
-                <IconButton aria-label="delete">
-                <DeleteIcon  onClick={()=>handleDelete(id)} />
+                <IconButton onClick={()=>handleDelete(id)} aria-label="delete">
+                    <DeleteIcon />
                 </IconButton>
             }
            >
