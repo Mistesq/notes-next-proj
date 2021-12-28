@@ -1,15 +1,12 @@
-import { IconButton } from '@mui/material';
+import { IconButton, ListItemButton, ListItem, ListItemText } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
-import styles from '../styles/Home.module.css'
-import ListItem from '@mui/material/ListItem';
-import ListItemText from '@mui/material/ListItemText';
 
 type NoteProps = {
-    id: any,
-    text: any,
-    date: any,
-    handleDelete: any,
-    handleEdit: any,
+    id: string,
+    text: string,
+    date: string,
+    handleDelete: (id:string) => void,
+    handleEdit: (id:string) => void,
     currentNoteId: string
 }
 
@@ -22,8 +19,10 @@ const NoteListItem = ({id,text,date,handleDelete, handleEdit, currentNoteId}:Not
                 <DeleteIcon  onClick={()=>handleDelete(id)} />
                 </IconButton>
             }
-            onClick={()=>handleEdit(id)}>
-                <ListItemText primary={text} secondary={date} />
+           >
+                <ListItemButton  onClick={()=>handleEdit(id)}>
+                    <ListItemText primary={text} secondary={date} />
+                </ListItemButton>
         </ListItem>
     )
 }

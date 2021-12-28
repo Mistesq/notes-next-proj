@@ -8,30 +8,25 @@ import { useEffect, useState} from 'react'
 import { nanoid } from 'nanoid'
 import Noteslist from './../components/NotesList';
 import Search from './../components/Search';
-import AddNote from '../components/AddNote';
-import EditNote from '../components/EditNote';
-
-type newNotes = {
-  id: string,
-  text: string,
-  date: string
-}
+import AddNote from './../components/AddNote';
+import EditNote from './../components/EditNote';
+import { Note } from './../types/general';
 
 const Home: NextPage = () => {
   const [showAddNote, setShowAddNote] = useState<boolean>(false)
-  const [notes, setNotes] = useState<Array<newNotes>>([{
+  const [notes, setNotes] = useState<Array<Note>>([{
     id: "EkhwqqmsRwlsObUdPjElT",
     text: "initial note",
     date: "28.12.2021"
   }])
-  const [currentNote, setCurrentNote] = useState<newNotes>({
+  const [currentNote, setCurrentNote] = useState<Note>({
     id: "EkhwqqmsRwlsObUdPjElT",
     text: "initial note",
     date: "28.12.2021"
   })
 	const [searchText, setSearchText] = useState('')
 	// useEffect(()=>{
-	// 	// const savedNotes = JSON.parse(localStorage.getItem('react-notes-app-data'))
+	// 	const savedNotes = JSON.parse(localStorage.getItem('react-notes-app-data'))
     
 	// 	if(savedNotes)
 	// 	{
@@ -41,21 +36,33 @@ const Home: NextPage = () => {
 
 	const addNote = (text:string) => {
 		const date = new Date()
-		const newNote:newNotes = {
+		const newNote:Note = {
 			id:nanoid(),
 			text:text,
 			date:date.toLocaleDateString()
 		}
-		const newNotes:Array<newNotes> = [...notes, newNote]
+		const newNotes:Array<Note> = [...notes, newNote]
 		setNotes(newNotes)
-    toggleAddNote(false)
 	}
 
-  const editNote = (noteId:string) => {
+  const selectNote = (noteId:string) => {
     setShowAddNote(false)
-    const note = notes.filter((note)=> note.id === noteId)
+    let note = notes.filter((note)=> note.id === noteId)[0]
     console.log('note', note)
-		setCurrentNote(note[0])
+		setCurrentNote(note)
+	}
+
+  const editNote = (noteId:string, text:string) => {
+    setShowAddNote(false)
+    let note = notes.filter((note)=> note.id === noteId)[0]
+    let newNotes = notes.slice();
+    newNotes.forEach((item) => {
+      if(item.id === noteId) {
+        item.text = text
+      }
+    })
+		setCurrentNote(note)
+		setNotes(newNotes)
 	}
 
 	const deleteNote = (id:string) => {
@@ -94,12 +101,17 @@ const Home: NextPage = () => {
           </Box>
           <Grid container spacing={2}>
             <Grid item xs={4}>
-              <Noteslist notes={notes.filter((note)=> note.text.toLowerCase().includes(searchText))} currentNoteId={currentNote.id} handleEdit={editNote} handleDelete={deleteNote} />
+              <Noteslist 
+                notes={notes.filter((note)=> note.text.toLowerCase().includes(searchText))} 
+                currentNoteId={showAddNote? '' : currentNote.id} 
+                handleEdit={selectNote} 
+                handleDelete={deleteNote} 
+              />
             </Grid>
             <Grid item xs={8}>
               {!showAddNote ?
-                <EditNote handleSave={addNote} handleEdit={addNote} handleDelete={deleteNote} note={currentNote}/>
-              : <AddNote handleSave={addNote} handleEdit={addNote} handleDelete={deleteNote}/>
+                <EditNote handleSave={addNote} handleEdit={editNote} handleDelete={deleteNote} note={currentNote}/>
+              : <AddNote handleSave={addNote}/>
             }
             </Grid>
           </Grid>

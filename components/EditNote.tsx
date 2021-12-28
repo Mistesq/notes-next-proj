@@ -1,22 +1,41 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { TextField, Button } from '@mui/material';
-import styles from '../styles/Home.module.css'
+import { Note } from './../types/general';
 
 type EditNoteProps = {
-    handleSave: any,
-    handleEdit: any,
-    handleDelete: any,
-    note: any
+    handleSave: (text:string) => void,
+    handleEdit: (noteId:string, text:string) => void,
+    handleDelete: (id:string) => void,
+    note: Note
 }
 
 const EditNote = ({handleSave, handleEdit, handleDelete, note}:EditNoteProps) => {
-    console.log('setNoteText', note)
     const [noteText, setNoteText] = useState(note.text)
+    const [idRemovalCandidate, setIdRemovalCandidate] = useState('')
+    const [isNeedRemovalCandidate, setIsNeedRemovalCandidate] = useState(false)
+
+    useEffect(()=>{
+        if(isNeedRemovalCandidate) {
+            handleDelete(idRemovalCandidate)
+        }
+		setNoteText(note.text)
+	},[note])
+
     const characterLimit = 1000
     const handleChange = (event:any) => {
         if(characterLimit - event.target.value.length >=0)
         {
-            setNoteText(event.target.value)
+            const value = event.target.value
+            setNoteText(value)
+            handleEdit(note.id, value )
+            if(value.length === 0) {
+                setIdRemovalCandidate(note.id)
+                setIsNeedRemovalCandidate(true)
+            }
+
+            if(idRemovalCandidate && note.id == idRemovalCandidate && value.length > 0) {
+                setIsNeedRemovalCandidate(false)
+            }
         }
     }
     const handleSubmit = () => {

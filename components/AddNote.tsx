@@ -1,9 +1,8 @@
 import { useState } from 'react'
 import { TextField, Button, Box } from '@mui/material';
-import styles from '../styles/Home.module.css'
 
 type AddNoteProps = {
-    handleSave: any
+    handleSave: (text:string) => void
 }
 
 const AddNote = ({handleSave}:AddNoteProps) => {
