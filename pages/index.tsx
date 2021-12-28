@@ -1,7 +1,7 @@
 import type { NextPage } from 'next'
 import Head from 'next/head'
 import Image from 'next/image'
-import { Grid, Box, Button, IconButton } from '@mui/material';
+import { Grid, Box, Button, IconButton, Link as MaterialLink } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
 import styles from '../styles/Home.module.css'
 import { useEffect, useState} from 'react'
@@ -11,8 +11,23 @@ import Search from './../components/Search';
 import AddNote from './../components/AddNote';
 import EditNote from './../components/EditNote';
 import { Note } from './../types/general';
+import { useRouter } from 'next/router'
+import Link from 'next/link'
+
+const pageNames = {
+  '/checkout':'Membership',
+  '/checkout/shipping':'Shipping',
+  '/checkout/payment':'Payment',
+  '/checkout/review':'Review'
+}
 
 const Home: NextPage = () => {
+  const router = useRouter()
+  // const link = pageNames[router.pathname]
+
+  console.log('router.pathname', router.pathname, router)
+  let showNotePage = false
+
   const [showAddNote, setShowAddNote] = useState<boolean>(false)
   const [notes, setNotes] = useState<Array<Note>>([{
     id: "EkhwqqmsRwlsObUdPjElT",
@@ -33,6 +48,10 @@ const Home: NextPage = () => {
 	// 		setNotes(savedNotes)
 	// 	}
 	// },[])
+
+  if(notes.findIndex(item => item.id == router.query.id) != -1) {
+    showNotePage = true
+  }
 
 	const addNote = (text:string) => {
 		const date = new Date()
@@ -88,48 +107,59 @@ const Home: NextPage = () => {
           <h1 className={styles.title}>
             Note app
           </h1>
-          <Box sx={{ 
-            display: 'flex', 
-            alignItems: 'baseline', 
-            justifyContent: 'flex-end',
-            my: 1.5
-            }}>
-            <Button sx={{ mx: 1.5}} variant="contained" onClick={()=>toggleAddNote(true)} endIcon={<AddIcon />}>
-              Add note
-            </Button>
-            <Search handleSearchNote={setSearchText} />
-          </Box>
-          <Grid container spacing={2}>
-            <Grid item xs={4}>
-              <Noteslist 
-                notes={notes.filter((note)=> note.text.toLowerCase().includes(searchText))} 
-                currentNoteId={showAddNote? '' : currentNote.id} 
-                handleEdit={selectNote} 
-                handleDelete={deleteNote} 
-              />
-            </Grid>
-            <Grid item xs={8}>
-              {!showAddNote ?
-                <EditNote handleSave={addNote} handleEdit={editNote} handleDelete={deleteNote} note={currentNote}/>
-              : <AddNote handleSave={addNote}/>
-            }
-            </Grid>
-          </Grid>
+          {!showNotePage ?
+            <>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'baseline', 
+                justifyContent: 'flex-end',
+                my: 1.5
+                }}>
+                <Button sx={{ mx: 1.5}} variant="contained" onClick={()=>toggleAddNote(true)} endIcon={<AddIcon />}>
+                  Add note
+                </Button>
+                <Search handleSearchNote={setSearchText} />
+              </Box>
+              <Grid container spacing={2}>
+                <Grid item xs={4}>
+                  <Noteslist 
+                    notes={notes.filter((note)=> note.text.toLowerCase().includes(searchText))} 
+                    currentNoteId={showAddNote? '' : currentNote.id} 
+                    handleEdit={selectNote} 
+                    handleDelete={deleteNote} 
+                  />
+                </Grid>
+                <Grid item xs={8}>
+                  {!showAddNote ?
+                    <EditNote handleSave={addNote} handleEdit={editNote} handleDelete={deleteNote} note={currentNote}/>
+                  : <AddNote handleSave={addNote}/>
+                }
+                </Grid>
+              </Grid>
+            </>
+            : 
+            <>
+              <Box sx={{ 
+                display: 'flex', 
+                alignItems: 'baseline', 
+                justifyContent: 'flex-start',
+                my: 1.5,
+                mb: 3
+                }}>
+                <MaterialLink> 
+                  <Link href="/">
+                    <a>Homepage</a>
+                  </Link>
+                </MaterialLink>
+              </Box>
+              <Grid container spacing={2}>
+                <Grid item xs={12}>
+                  <EditNote handleSave={addNote} handleEdit={editNote} handleDelete={deleteNote} note={currentNote}/>
+                </Grid>
+              </Grid>
+            </>
+          }
         </main>
-      
-
-      <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer>
     </div>
   )
 }
