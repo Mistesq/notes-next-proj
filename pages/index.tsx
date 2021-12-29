@@ -39,7 +39,6 @@ const Home: NextPage = () => {
 		if(savedNotes)
 		{
       const notes = JSON.parse(savedNotes)
-      console.log('savedNotes', notes)
 			setNotes(notes)
 		}
 	},[])
@@ -62,7 +61,6 @@ const Home: NextPage = () => {
   const selectNote = (noteId:string) => {
     setShowAddNote(false)
     let note = notes.filter((note)=> note.id === noteId)[0]
-    console.log('note', note)
 		setCurrentNote(note)
 	}
 

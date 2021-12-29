@@ -12,7 +12,6 @@ type propsNoteList = {
 
 const Noteslist = ({notes,handleEdit,handleDelete, currentNoteId}:propsNoteList) => {
     useEffect(()=>{
-        console.log('local storage set')
         if(notes.length > 1) {
             localStorage.setItem('react-notes-app-data',JSON.stringify(notes))
         }

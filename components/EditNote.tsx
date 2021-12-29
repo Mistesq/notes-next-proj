@@ -18,6 +18,7 @@ const EditNote = ({handleEdit, handleDelete, note}:EditNoteProps) => {
             handleDelete(idRemovalCandidate)
         }
 		setNoteText(note.text)
+	// eslint-disable-next-line react-hooks/exhaustive-deps
 	},[note])
 
     const characterLimit = 1000
